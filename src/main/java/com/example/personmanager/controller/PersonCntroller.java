@@ -6,7 +6,9 @@ import com.example.personmanager.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +54,12 @@ public class PersonCntroller {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PostMapping
+    ResponseEntity createPerson(@RequestBody Person person, UriComponentsBuilder uriComponentsBuilder){
+        Person createdPerson = personRepository.save(person);
+        URI location = uriComponentsBuilder.path("/api/person/{id}").buildAndExpand(createdPerson.getId()).toUri();
+        return ResponseEntity.created(location).body(createdPerson);
+    }
 
 
 }
