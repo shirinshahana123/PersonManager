@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/api/persons")
 
 public class PersonCntroller {
     @Autowired
@@ -40,6 +40,14 @@ public class PersonCntroller {
 
     }
 
+
+    @RequestMapping(value="/{id}/cars")
+    ResponseEntity  getAllPersonOwnedCars(@PathVariable("id") Integer id){
+
+        return ResponseEntity.ok(personService.getAllOwnedCars(id));
+
+    }
+
     @PutMapping(value="/{id}")
     ResponseEntity  updatePerson(@PathVariable("id") Integer id, @RequestBody Person person){
 
@@ -56,8 +64,10 @@ public class PersonCntroller {
 
     @PostMapping
     ResponseEntity createPerson(@RequestBody Person person, UriComponentsBuilder uriComponentsBuilder){
+        person.getOwnedCars().forEach(car -> car.setOwner(person));
+
         Person createdPerson = personRepository.save(person);
-        URI location = uriComponentsBuilder.path("/api/person/{id}").buildAndExpand(createdPerson.getId()).toUri();
+        URI location = uriComponentsBuilder.path("/api/persons/{id}").buildAndExpand(createdPerson.getId()).toUri();
         return ResponseEntity.created(location).body(createdPerson);
     }
 

@@ -1,14 +1,14 @@
 package com.example.personmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +22,10 @@ public class Person{
     private int id;
     private String name;
     private int age;
+
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL)
+
+    List<Car> ownedCars;
 
 
     @Override
